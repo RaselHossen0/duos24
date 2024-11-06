@@ -29,6 +29,7 @@
  */
  
 #include <stm32_startup.h>
+#include "bootloader.h"
 const uint32_t STACK_START = (uint32_t)SRAM_END;
 uint32_t NVIC_VECTOR[] __attribute__((section (".isr_vector")))={
 	STACK_START,
@@ -161,7 +162,9 @@ void Reset_Handler(void){
 	_text_size = (uint32_t)&_etext - (uint32_t)&_stext;
 	_data_size = (uint32_t)&_edata - (uint32_t)&_sdata;
 	_bss_size = (uint32_t)&_ebss - (uint32_t)&_sbss;
-	kmain();
+
+	Bootloader_Main();
+	
 }
 void Default_Handler(void){
 	while(1);

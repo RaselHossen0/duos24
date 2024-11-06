@@ -58,7 +58,7 @@ void __sys_init(void)
 	SerialLin2_init(__CONSOLE,0);
 	SerialLin6_init(&huart6,0);
 	Ringbuf_init(__CONSOLE);
-	Ringbuf_init(&huart6);
+	// Ringbuf_init(&huart6);
 	ConfigTimer2ForSystem();
 	__ISB();
 	#ifdef DEBUG
@@ -70,6 +70,7 @@ void __sys_init(void)
 	kprintf("Time Elapse %d ms\n",__getTime());
 	kprintf("*************************************\r\n");
 	kprintf("# ");
+	kprintf("System Clock: %d MHz\n",180);
 	show_system_info();
 	display_group_info();
 	#endif
@@ -88,8 +89,9 @@ void SYS_ROUTINE(void)
 * Display your Full Name, Registration Number and Class Roll
 * Each line displays a student or group member information
 */
-void display_group_info(void)
-{
-	kprintf("Empty Group!! -- Update Now\n")
-
+void display_group_info(void) {
+    kprintf("Group Members Information:\n");
+    kprintf("1. Rasel Hossen\t\t39\n");
+    kprintf("2. Dipto Mistry\\t34\n");
+    kprintf("3. Md. Mushiur Rahman\\t58\n");
 }

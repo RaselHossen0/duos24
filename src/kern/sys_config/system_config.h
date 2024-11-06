@@ -39,10 +39,17 @@ extern "C" {
 #endif
 #include <sys_usart.h>
 extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart3;
+
 /**
  * Define console for log data and default display
 */
 #define  __CONSOLE &huart2
+/**
+ * Define debug console for debug data
+*/
+#define  __DEBUGCONSOLE &huart6
+
 
 
 

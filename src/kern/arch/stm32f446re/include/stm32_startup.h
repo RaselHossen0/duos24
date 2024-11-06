@@ -39,7 +39,7 @@ extern "C" {
 
 
 
-int kmain(void);
+
 
 extern uint32_t _stext;
 extern uint32_t _etext;

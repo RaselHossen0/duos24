@@ -13,16 +13,31 @@ DEV=$(OS_PATH)/dev
 SYSTEM_CONFIG=$(OS_PATH)/sys_config
 # System Device Prototype
 
+# Define the path to the ARM GCC toolchain
+GCC_PATH=/opt/homebrew/Cellar/arm-none-eabi-gcc/14.2.0
+
+
 
 INCLUDE=-I$(OS_PATH)/include \
 -I$(OS_PATH)/arch/include \
 -I$(OS_PATH)/arch/include/cm4 \
 -I$(OS_PATH)/arch/$(MCU)/include \
 -I$(OS_PATH)/include/kern \
+-I$(OS_PATH)/bootloader \
+-I$(OS_PATH)/bootloader/crc \
 -I$(DEV)/include \
 -I$(USERLAND)/include \
 -I$(SYSTEM_CONFIG) \
 -I$(OS_PATH)/include/sotom
+
+# Include paths for the ARM GCC toolchain
+INCLUDE += -I$(GCC_PATH)/lib/gcc/arm-none-eabi/14.2.0/include \
+           -I$(GCC_PATH)/lib/gcc/arm-none-eabi/14.2.0/include-fixed \
+           -I$(GCC_PATH)/arm-none-eabi/include
+
+# Include paths for system headers
+INCLUDE += -isystem /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+
 
 
 
@@ -73,6 +88,8 @@ debug.o \
 sys_spi.o \
 sys_err.o \
 sys_rtc.o \
+bootloader.o \
+crc.o \
 duos \
 final.elf
 
@@ -158,6 +175,11 @@ sys_rtc.o: $(OS_SYS_LIB)/sys_rtc.c
 
 test_can.o: $(USERLAND)/utils/test_can.c
 	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(OBJECT)/$@
+bootloader.o: $(OS_PATH)/bootloader/bootloader.c
+	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(OBJECT)/$@
+
+crc.o: $(OS_PATH)/bootloader/crc/crc.c
+	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $(OBJECT)/$@
 
 duos: $(OBJECT)/kmath.o \
 	$(OBJECT)/kfloat.o  \
@@ -178,6 +200,8 @@ duos: $(OBJECT)/kmath.o \
 	$(OBJECT)/debug.o \
 	$(OBJECT)/timer.o \
 	$(OBJECT)/sys_err.o \
+	$(OBJECT)/bootloader.o \
+	$(OBJECT)/crc.o \
 	$(OBJECT)/sys_rtc.o  
 	
 
@@ -205,7 +229,10 @@ final.elf: $(OBJECT)/kmath.o \
 	$(OBJECT)/debug.o \
 	$(OBJECT)/timer.o \
 	$(OBJECT)/sys_err.o \
+	$(OBJECT)/bootloader.o \
+	$(OBJECT)/crc.o \
 	$(OBJECT)/sys_rtc.o 
+
 	
 	
 	$(CC) $(LDFLAGS) $^ -o build/$@
@@ -218,5 +245,5 @@ clean:
 
 # To Students -- Modify to match with the appropriate driver file.
 load:
-	openocd -f /usr/share/openocd/scripts/board/stm32f4discovery.cfg -f /usr/share/openocd/scripts/interface/stlink.cfg -c "program target/duos verify reset exit"
+	openocd -f /opt/homebrew/Cellar/open-ocd/0.12.0_1/share/openocd/scripts/board/stm32f4discovery.cfg -f /opt/homebrew/Cellar/open-ocd/0.12.0_1/share/openocd/scripts/interface/stlink.cfg -c "program target/duos verify reset exit"
 

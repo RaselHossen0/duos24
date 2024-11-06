@@ -38,6 +38,7 @@ extern "C" {
 
 #define SET_ACT_DEV(QUEUE,DEV)  (QUEUE |= DEV)
 void __sys_init(void); 
+void display_group_info(void);
 void SoftReset(void);
 uint32_t verify_connectivity(void);
 

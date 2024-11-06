@@ -198,6 +198,7 @@ int Uart_peek(UART_HandleTypeDef *uart)
 		return -1;
 }
 
+
 int Uart_read(UART_HandleTypeDef *uart)
 {
 	if (IS_USART_INSTANCE(uart->Instance))
